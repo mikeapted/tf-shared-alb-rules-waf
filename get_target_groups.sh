@@ -20,7 +20,6 @@ function return_token() {
   for tg_arn in ${TG_LIST}; do
     MATCH=$(aws elbv2 describe-tags --resource-arn ${tg_arn} | jq -r '.TagDescriptions[].Tags[] | select((.Key=="elasticbeanstalk:environment-name") and .Value=="'${EB_NAME}'")' )
     if [[ -n "${MATCH}" ]]; then 
-      # echo "Matched: " $tg_arn
       export TG_ARN=$tg_arn;
     fi
   done
