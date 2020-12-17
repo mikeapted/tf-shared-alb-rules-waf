@@ -4,15 +4,11 @@ resource "aws_wafv2_regex_pattern_set" "deny_eb_cname_regex" {
   scope       = "REGIONAL"
 
   regular_expression {
-    regex_string = "tf-alb-alpha-dev.us-east-1.elasticbeanstalk.com"
+    regex_string = "*.elasticbeanstalk.com"
   }
 
   regular_expression {
-    regex_string = "tf-alb-beta-dev.us-east-1.elasticbeanstalk.com"
-  }
-
-  regular_expression {
-    regex_string = aws_lb.tf_alb_lb.dns_name
+    regex_string = "*.elb.amazonaws.com"
   }
 }
 
