@@ -4,11 +4,11 @@ resource "aws_wafv2_regex_pattern_set" "deny_eb_cname_regex" {
   scope       = "REGIONAL"
 
   regular_expression {
-    regex_string = "*.elasticbeanstalk.com"
+    regex_string = ".+.elasticbeanstalk.com"
   }
 
   regular_expression {
-    regex_string = "*.elb.amazonaws.com"
+    regex_string = ".+.elb.amazonaws.com"
   }
 }
 
