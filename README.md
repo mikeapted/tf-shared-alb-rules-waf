@@ -12,7 +12,7 @@ Before running applying the plan you will need:
 ### Set your environment variables for required variables
 
 ```bash
-export TF_VAR_admin_cidrs="['X.X.X.X/X']"
+export TF_VAR_admin_cidrs='["X.X.X.X/X"]'
 export TF_VAR_domain_name=xxxx.xxx.xxxx.xx
 export TF_VAR_certificate_arn=arn:aws:acm:us-east-1:111111111111:certificate/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeeee
 ```
