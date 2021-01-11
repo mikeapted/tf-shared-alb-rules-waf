@@ -23,3 +23,7 @@ export TF_VAR_certificate_arn=arn:aws:acm:us-east-1:111111111111:certificate/aaa
 terraform init
 terraform apply
 ```
+
+# License
+
+This library is licensed under the Apache 2.0 License.
