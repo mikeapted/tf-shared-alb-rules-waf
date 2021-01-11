@@ -1,0 +1,10 @@
+[
+  {
+      "Type": "fixed-response",
+      "FixedResponseConfig": {
+          "MessageBody": "OK",
+          "StatusCode": "204",
+          "ContentType": "text/plain"
+      }
+  }
+]

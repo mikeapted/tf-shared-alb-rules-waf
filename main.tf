@@ -4,6 +4,8 @@ provider "aws" {
 
 provider "external" {}
 
+// Networking infra
+
 data "aws_vpc" "default" {
   default = true
 } 
@@ -11,6 +13,8 @@ data "aws_vpc" "default" {
 data "aws_subnet_ids" "default" {
   vpc_id = data.aws_vpc.default.id
 }
+
+// Security group
 
 resource "aws_security_group" "tf_alb_sg" {
   name        = "tf-alb-sg"
@@ -44,6 +48,8 @@ resource "aws_security_group" "tf_alb_sg" {
     Name = "tf-alb-sg"
   }
 }
+
+// Shared load balancer and listeners
 
 resource "aws_lb" "tf_alb_lb" {
   name               = "tf-alb-lb"
@@ -87,9 +93,13 @@ resource "aws_lb_listener" "tf_alb_lb_https" {
   }
 }
 
+// EB app
+
 resource "aws_elastic_beanstalk_application" "tf_alb_app" {
   name = "tf-alb-app"
 }
+
+// EB environments (with depenencies)
 
 module "eb_env_alpha" {
   source   = "./modules/eb-env"
@@ -113,6 +123,8 @@ module "eb_env_beta" {
   depends_on = [module.eb_env_alpha]
 }
 
+// External provider for target group ARN retreival 
+
 data "external" "tg_arn_alpha" {
   program = ["sh", "${path.module}/get_target_groups.sh"]
   query = {
@@ -128,6 +140,26 @@ data "external" "tg_arn_beta" {
     lb_arn = aws_lb.tf_alb_lb.arn
   }
 }
+
+// External provider for updating default rules
+
+data "external" "default_rule_arn_alpha" {
+  program = ["sh", "${path.module}/modify_default_rules.sh"]
+  query = {
+    eb_hostname = module.eb_env_alpha.cname
+    listener_arn = aws_lb_listener.tf_alb_lb_https.arn
+  }
+}
+
+data "external" "default_rule_arn_beta" {
+  program = ["sh", "${path.module}/modify_default_rules.sh"]
+  query = {
+    eb_hostname = module.eb_env_beta.cname
+    listener_arn =aws_lb_listener.tf_alb_lb_https.arn
+  }
+}
+
+// Listener rules
 
 resource "aws_lb_listener_rule" "alpha_auth_admin_allow" {
   listener_arn = aws_lb_listener.tf_alb_lb_https.arn
